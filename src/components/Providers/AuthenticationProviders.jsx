@@ -7,12 +7,15 @@ const auth = getAuth(app);
 const AuthenticationProviders = ({children}) => {
 
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const createUser = (email, password) => {
+        setLoading(true);
         return createUserWithEmailAndPassword(auth, email, password);
     }
 
     const signIn = (email, password) => {
+        setLoading(true);
         return signInWithEmailAndPassword(auth, email, password);
     }
 
@@ -25,6 +28,7 @@ const AuthenticationProviders = ({children}) => {
     useEffect( () => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
             setUser(currentUser);
+            setLoading(false);
         });
 
         // Stop Observing While Unmounting
@@ -35,6 +39,7 @@ const AuthenticationProviders = ({children}) => {
 
     const userInfo = {
         user,
+        loading,
         createUser,
         signIn,
         logOut
